@@ -62,7 +62,7 @@ This project deploys a frontend Django polls web application framework https://d
 
 ## Requirements
 - Minikube cluster 
-    memory 8192, cpus 2
+    ```memory 8192, cpus 2```
 - kubectl 
 
 ## How to run project
@@ -74,7 +74,8 @@ The shell script **deploy.sh** contains all the steps necesary to run the applic
 
 ## Verify django Application
 - run `minikube service django-app -n postgresql-operator-system`
-- to access admin portal, add /admin to the minikube domain name, default admin **user,password(admin,admin)**
+- to access admin portal, **add /admin** to the minikube domain name. 
+- Default **admin user,password(admin,admin)**
 
 ## Delete Project When Complete
 - `minikube stop && minikube delete`
