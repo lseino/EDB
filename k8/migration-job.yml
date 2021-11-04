@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migration
+  labels:
+    app: migration
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: migration
+    spec:
+      containers:
+      - name: migration
+        image: "django:1.0"
+        imagePullPolicy: Never
+        env:
+        - name: DEV
+          value: "1"
+      restartPolicy: Never

@@ -17,16 +17,13 @@ spec:
       containers:
       - image: "django:1.0"
         name: django-polls
-        env:
-        - name: DEV
-          value: "1"
-        resources:
-            requests:
-              memory: "32Mi"
-              cpu: "125m"
-            limits:
-              memory: "64Mi"
-              cpu: "0.5"
+        # resources:
+        #     requests:
+        #       memory: "32Mi"
+        #       cpu: "125m"
+        #     limits:
+        #       memory: "64Mi"
+        #       cpu: "0.5"
         imagePullPolicy: Never # only for minikube builds where #eval(minikube docker-env) is used
 ---
 apiVersion: v1
@@ -38,7 +35,6 @@ metadata:
 spec:
   type: NodePort
   ports:
-   - port: 80
-     targetPort: 8000
+   - port: 8000
   selector:
    app: django-polls

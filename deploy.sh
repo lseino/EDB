@@ -15,32 +15,36 @@ build_polls_app(){
     docker build -t $IMAGE_NAME .
 }
 
-# make sure you have kubernetes context set for your cluster
 deploy_db(){
 
     echo "deploying postgres cloud native operator ............"
     kubectl apply -f https://get.enterprisedb.io/cnp/postgresql-operator-1.9.1.yaml
 
-    echo "deploying 3 node postgres cluster ............................"
+    echo "waiting for postgres operator to come live ............"
+    kubectl rollout status deployment -n postgresql-operator-system postgresql-operator-controller-manager
+    
+    echo "checking status of deployment ............"
+    kubectl get deploy -n postgresql-operator-system postgresql-operator-controller-manager
+
+    echo "deploying postgres clusters ............................"
     kubectl apply -f ./k8/postgres-cluster.yml -n $namespace
+
 }
 
 deploy_prometheus(){
-    
+
     echo "deploying prometheus operator ..........................."
-    kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/master/bundle.yaml -n $namespace || true
+    kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/master/bundle.yaml || true
     
     echo "deploying the prometheus default pod metrics monitor"
-    kubectl apply -f ./k8/prometheus-deploy.yml -n $namespace
+    kubectl apply -f ./k8/prometheus-deploy.yml
 }
 
 deploy_polls_app(){
-
+    echo " running migration job"
+    kubectl apply -f ./k8/migration-job.yml -n $namespace
     echo " deploying django web application to kubernetes"
     kubectl apply -f ./k8/django-deploy.yml -n $namespace
-
-    #echo " application url "
-    #minikube service -n $namespace
 
 }
 
